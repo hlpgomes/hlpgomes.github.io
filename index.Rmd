@@ -486,7 +486,7 @@ as.tibble(a4) %>% rename(., "Table 8: Time Series Test"=V1, "p Value"=V2, "Resul
 
 
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, fig.align = "center"}
 
 library(cowplot)
 library(gridExtra)
@@ -520,7 +520,7 @@ ggseasonplot(dt1) +
   theme(legend.position = "none") 
 ```
 
-```{r, warning=FALSE, message=FALSE, out.height= c("70%", "70%"), fig.show='hold'}
+```{r, warning=FALSE, message=FALSE, out.height= c("70%", "70%"), fig.show='hold', fig.align = "center"}
 
 ######################################
 ###  Decomposition of Times series  ##
