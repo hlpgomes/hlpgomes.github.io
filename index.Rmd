@@ -485,7 +485,12 @@ as.tibble(a4) %>% rename(., "Table 8: Time Series Test"=V1, "p Value"=V2, "Resul
 ```
 
 
-```{r, warning=FALSE, message=FALSE, out.width='8cm', out.height='7cm', fig.show='hold', fig.cap='Time Series Plots'}
+
+```{r, warning=FALSE, message=FALSE}
+
+library(cowplot)
+library(gridExtra)
+library(grid)
 
 df <- data_index %>%
   filter(Date1 > "2019-10-30", Date1 <= "2019-11-30", IX_type=="Proxy_wgt") %>% 
@@ -494,14 +499,20 @@ df <- data_index %>%
 dt0 <- ts_ts(ts_long(df))
 dt1 <- ts(dt0, frequency = 7)
 
-ggAcf(dt1, lag=31) +
-  ggtitle("Autocorrelation for Daily Price Index (Geo-means)")
-ggPacf(dt1, lag=31) +
-  ggtitle("Partial Autocorrelation for Daily Price Index")
+p1 <- ggAcf(dt1, lag=31) +
+  ggtitle("Autocorrelation Plot for Daily Price Index (Geo-means)")
+
+p2 <- ggPacf(dt1, lag=31) +
+  ggtitle("Partial Autocorrelation Plot for Daily Price Index (Geo-means)")
+
+grid.arrange(p1,p2, layout_matrix = rbind(c(1,1),c(2,2)))
+
+
 ```
 
 
-```{r, warning=FALSE, message=FALSE, out.width='8cm', out.height='7cm', fig.show='hold', fig.align = "center"}
+
+```{r, warning=FALSE, message=FALSE, fig.align = "center", fig.show='hold', out.width = "70%"}
 
 ggseasonplot(dt1) +
   ylab("Percent Change (%)") +
@@ -509,24 +520,29 @@ ggseasonplot(dt1) +
   theme(legend.position = "none") 
 ```
 
-```{r, warning=FALSE, message=FALSE, out.width='8cm', out.height='7cm', fig.show='hold'}
+```{r, warning=FALSE, message=FALSE, out.height= c("70%", "70%"), fig.show='hold'}
 
 ######################################
 ###  Decomposition of Times series  ##
 ######################################
 
-dt1 %>% decompose(type="multiplicative") %>%
+library(grid)
+
+p1 <- dt1 %>% decompose(type="multiplicative") %>%
   autoplot() + xlab("Week") +
-  ggtitle("Classical multiplicative decomposition
-    of Daily Price Index (Geo-means)")
+  ggtitle("Classical multiplic. decomposition
+    Daily Price Index (Geo-means)")
 
 
-dt1 %>% decompose(type="additive") %>%
+p2 <- dt1 %>% decompose(type="additive") %>%
   autoplot() + xlab("Week") +
   ggtitle("Classical additive decomposition
-    of Daily Price Index (Geo-means)")
+    Daily Price Index (Geo-means)")
+
+grid.arrange(p1, p2, nrow = 1)
 
 ```
+
 
 # Final Deliverables: Shiny App, Daily Index & Regressions
 A Shiny App is developed as the final deliverable of this study to visualize the daily laptop indexes to the users with interactive features and wide range of selection choices (https://hlpgomes.shinyapps.io/priceindex/).
